@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 var Badge = require('./Badge');
 var Separator = require('./Helpers/Separator');
+var Web_View= require('./Helpers/WebViewer');
 
 class Repository extends Component {
     render() {
@@ -44,7 +45,11 @@ class Repository extends Component {
     }
 
     openPage(url) {
-        console.log("the url is " + url);
+        this.props.navigator.push({
+            title: 'Web View',
+            component: Web_View,
+            passProps: {url: url},
+        });
     }
 };
 
