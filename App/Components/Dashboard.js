@@ -7,12 +7,18 @@ import {
     TouchableHighlight
 } from 'react-native';
 
+var Profile = require('./Profile');
 
 class Dashboard extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
+        console.log(this.props.userInfo);
         return (
             <View style={styles.container}>
-                <Image style={styles.userAvatar} source={{uri: this.props.userInfo[0].owner.avatar_url}}/>
+                <Image style={styles.userAvatar} source={{uri: this.props.userInfo.avatar_url}}/>
                 <TouchableHighlight style={styles.profile} onPress={this.goToProfile.bind(this)}>
                     <Text style={styles.viewText}>View Profile</Text>
                 </TouchableHighlight>
@@ -29,7 +35,11 @@ class Dashboard extends Component {
     }
 
     goToProfile() {
-        console.log('go to profile');
+        this.props.navigator.push({
+            title: this.props.userInfo.name,
+            component: Profile,
+            passProps: {userInfo: this.props.userInfo},
+        });
     }
 
     goToRepos() {

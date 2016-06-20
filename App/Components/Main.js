@@ -70,7 +70,6 @@ class Main extends Component {
 
         api.getBio(this.state.username)
             .then((response) => {
-                console.log("not found");
                 if (response.message === 'Not Found') {
                     this.setState({
                         error: 'User not found',
