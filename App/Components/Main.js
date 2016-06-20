@@ -22,6 +22,21 @@ class Main extends Component {
     }
 
     render() {
+        var showErr = (
+            this.state.error ? <Text style={styles.error}> {this.state.error} </Text> : <View></View>
+        );
+
+        var indicator = (
+            this.state.isLoading ?
+                <ActivityIndicatorIOS
+                animating={this.state.isLoading}
+                hidesWhenStopped={true}
+                color="#111111"
+                size="large"/>
+                :
+                <View></View>
+        );
+
         return (
             <View style={styles.mainContainer}>
                 <Text style={styles.title}>Search for a Github User</Text>
@@ -34,6 +49,10 @@ class Main extends Component {
                 <TouchableHighlight style={styles.button} onPress={this.handleSubmit.bind(this)} underlayColor="white">
                     <Text style={styles.searchText}> SEARCH </Text>
                 </TouchableHighlight>
+
+                {indicator}
+
+                {showErr}
             </View>
         );
     }
@@ -48,8 +67,6 @@ class Main extends Component {
         this.setState({
             isLoading: true,
         });
-        console.log("submit");
-
 
         api.getBio(this.state.username)
             .then((response) => {
@@ -118,6 +135,10 @@ var styles = StyleSheet.create({
     searchText: {
         textAlign: 'center',
         fontWeight: 'bold',
+    },
+
+    error: {
+        color: '#110000',
     }
 
 });
