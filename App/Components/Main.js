@@ -76,7 +76,6 @@ class Main extends Component {
                         isLoading: false,
                     });
                 } else {
-                    console.log(response);
                     this.props.navigator.push({
                         title: response.name || 'Select An Option',
                         component: Dashboard,

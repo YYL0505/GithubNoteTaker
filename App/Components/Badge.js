@@ -9,7 +9,6 @@ import {
 
 class Badge extends Component {
     render() {
-        console.log(this.props.userInfo);
         return (
             <View style={styles.container}>
                 <Image style={styles.image} source={{uri: this.props.userInfo.avatar_url}}/>
