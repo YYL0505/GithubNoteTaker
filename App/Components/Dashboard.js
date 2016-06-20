@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 
 var Profile = require('./Profile');
+var Repository = require('./Repository');
+var api = require('../Utils/api');
 
 class Dashboard extends Component {
     constructor(props) {
@@ -15,7 +17,6 @@ class Dashboard extends Component {
     }
 
     render() {
-        console.log(this.props.userInfo);
         return (
             <View style={styles.container}>
                 <Image style={styles.userAvatar} source={{uri: this.props.userInfo.avatar_url}}/>
@@ -36,14 +37,24 @@ class Dashboard extends Component {
 
     goToProfile() {
         this.props.navigator.push({
-            title: this.props.userInfo.name,
+            title: 'Profile',
             component: Profile,
             passProps: {userInfo: this.props.userInfo},
         });
     }
 
     goToRepos() {
-        console.log('go to repository');
+        api.getRepos(this.props.userInfo.login)
+            .then((response) => {
+                    this.props.navigator.push({
+                        title: 'Repository',
+                        component: Repository,
+                        passProps: {
+                            userInfo: this.props.userInfo,
+                            repos: response,},
+                    });
+            });
+
 
     }
 
