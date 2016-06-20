@@ -8,6 +8,9 @@ import {
     ActivityIndicatorIOS,
 } from 'react-native';
 
+var api = require('../Utils/api');
+var Dashboard = require('./Dashboard');
+
 class Main extends Component {
     constructor(props) {
         super(props);
@@ -45,8 +48,32 @@ class Main extends Component {
         this.setState({
             isLoading: true,
         });
-
         console.log("submit");
+
+
+        api.getBio(this.state.username)
+            .then((response) => {
+                console.log("not found");
+                if (response.message === 'Not Found') {
+                    this.setState({
+                        error: 'User not found',
+                        isLoading: false,
+                    });
+                } else {
+                    console.log(response);
+                    this.props.navigator.push({
+                        title: response.name || 'Select An Option',
+                        component: Dashboard,
+                        passProps: {userInfo: response},
+                    });
+
+                    this.setState({
+                        error: false,
+                        isLoading: false,
+                        username: "",
+                    });
+                }
+            });
     }
 }
 
