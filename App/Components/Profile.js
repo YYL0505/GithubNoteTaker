@@ -6,6 +6,7 @@ import {
     ScrollView
 } from 'react-native';
 var Badge = require('./Badge');
+var Separator = require('./Helpers/Separator');
 
 class Profile extends Component {
     constructor(props) {
@@ -20,9 +21,12 @@ class Profile extends Component {
                 return <View key={index}/>
             } else {
                 return(
-                    <View key={index} style={styles.rowContainer}>
-                        <Text style={styles.rowTitle}>{this.getRowTitle(userInfo, item)}</Text>
-                        <Text style={styles.rowContent}>{userInfo[item]}</Text>
+                    <View key={index}>
+                        <View style={styles.rowContainer}>
+                            <Text style={styles.rowTitle}>{this.getRowTitle(userInfo, item)}</Text>
+                            <Text style={styles.rowContent}>{userInfo[item]}</Text>
+                        </View>
+                        <Separator />
                     </View>
                 );
             }
