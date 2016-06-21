@@ -47,6 +47,7 @@ class Repository extends Component {
 
     openPage(url) {
         this.props.navigator.push({
+            id: 'web_view',
             title: 'Web View',
             component: Web_View,
             passProps: {url: url},

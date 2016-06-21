@@ -3,6 +3,7 @@ import {
     StyleSheet,
     WebView,
     View,
+    Platform
 } from 'react-native';
 
 class WebViewer extends Component {
@@ -24,6 +25,7 @@ var styles = StyleSheet.create({
         backgroundColor: '#F6F6Ef',
         flex: 1,
         flexDirection: 'column',
+        marginTop: (Platform.OS === 'ios') ? 65 : 50,
     }
 });
 

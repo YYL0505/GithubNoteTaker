@@ -13,6 +13,7 @@ var Dashboard = require('./App/Components/Dashboard');
 var Profile = require('./App/Components/Profile');
 var Repository = require('./App/Components/Repository');
 var Note = require('./App/Components/Note');
+var Web_View= require('./App/Components/Helpers/WebViewer');
 
 class GithubNoteTaker extends Component {
     render() {
@@ -85,6 +86,10 @@ class GithubNoteTaker extends Component {
             case 'note':
                 return (
                     <Note navigator={navigator} title={route.title} userInfo={route.passProps.userInfo} notes={route.passProps.notes}/>
+                );
+            case 'web_view':
+                return (
+                    <Web_View navigator={navigator} title={route.title} url={route.passProps.url}/>
                 );
         }
     }
