@@ -9,6 +9,7 @@ import {
 
 var Profile = require('./Profile');
 var Repository = require('./Repository');
+var Note = require('./Note');
 var api = require('../Utils/api');
 
 class Dashboard extends Component {
@@ -54,12 +55,22 @@ class Dashboard extends Component {
                             repos: response,},
                     });
             });
-
-
     }
 
     goToNotes() {
-        console.log('go to notes');
+        api.getNotes(this.props.userInfo.login)
+            .then((response) => {
+                response = response || {};
+                console.log(response);
+                this.props.navigator.push({
+                    title: 'Notes',
+                    component: Note,
+                    passProps: {
+                        userInfo: this.props.userInfo,
+                        notes: response,
+                    },
+                });
+            });
 
     }
 }
