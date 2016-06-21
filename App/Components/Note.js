@@ -7,6 +7,7 @@ import {
     TouchableHighlight,
     ListView
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 var api = require('../Utils/api');
 var Badge = require('./Badge');
@@ -20,6 +21,7 @@ class Note extends Component {
             dataSource: this.dataSource.cloneWithRows(this.props.notes),
             note: '',
             error: '',
+            isLoading: false,
         };
     }
 
@@ -33,6 +35,10 @@ class Note extends Component {
                     renderHeader={this.renderHeader.bind(this)}/>
 
                 {this.footer()}
+
+                <View style={styles.spinnerContainer}>
+                    <Spinner visible={this.state.isLoading}/>
+                </View>
             </View>
         );
     }
@@ -80,16 +86,28 @@ class Note extends Component {
     }
 
     submitNote() {
+        this.setState({
+            isLoading: true,
+        });
+
         api.addNote(this.props.userInfo.login, this.state.note)
             .then(() => {
                 api.getNotes(this.props.userInfo.login)
                     .then((response) => {
+                        this.setState({
+                            isLoading: false,
+                        });
+
                         this.setState({
                             dataSource: this.dataSource.cloneWithRows(response),
                             note: '',
                         });
                     })
                     .catch((error) => {
+                        this.setState({
+                            isLoading: false,
+                        });
+
                         console.log('Request failed' + error);
                         this.setState({
                             error: error,
@@ -110,6 +128,10 @@ var styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
+    },
+
+    spinnerContainer: {
+        transform: [{'translate':[0,0,1]}],
     },
 
     buttonText: {
