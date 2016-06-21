@@ -6,7 +6,10 @@ import {
     TextInput,
     TouchableHighlight,
     ActivityIndicatorIOS,
+    Platform
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 var api = require('../Utils/api');
 var Dashboard = require('./Dashboard');
@@ -28,13 +31,19 @@ class Main extends Component {
 
         var indicator = (
             this.state.isLoading ?
-                <ActivityIndicatorIOS
-                animating={this.state.isLoading}
-                hidesWhenStopped={true}
-                color="#111111"
-                size="large"/>
-                :
-                <View></View>
+                (Platform.OS === 'ios' ?
+                    <ActivityIndicatorIOS
+                        animating={this.state.isLoading}
+                        hidesWhenStopped={true}
+                        color="#111111"
+                        size="large"/>
+                    :
+                    <View style={styles.spinnerContainer}>
+                        <Spinner visible={this.state.isLoading}/>
+                    </View>
+                )
+                : <View></View>
+
         );
 
         return (
@@ -76,11 +85,19 @@ class Main extends Component {
                         isLoading: false,
                     });
                 } else {
-                    this.props.navigator.push({
-                        title: response.name || 'Select An Option',
-                        component: Dashboard,
-                        passProps: {userInfo: response},
-                    });
+                    if (Platform.OS === 'ios') {
+                        this.props.navigator.push({
+                            title: response.name || 'Select An Option',
+                            component: Dashboard,
+                            passProps: {userInfo: response},
+                        });
+                    } else {
+                        this.props.navigator.push({
+                            id: 'dashboard',
+                            title: response.name || 'Select An Option',
+                            passProps: {userInfo: response},
+                        });
+                    }
 
                     this.setState({
                         error: false,
@@ -96,10 +113,14 @@ var styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         padding: 30,
-        marginTop: 65,
+        marginTop: (Platform.OS === 'ios') ? 65 : 50,
         flexDirection: 'column',
         justifyContent: 'center',
         backgroundColor: '#48BBEC',
+    },
+
+    spinnerContainer: {
+        transform: [{'translate':[0,0,1]}],
     },
 
     title: {

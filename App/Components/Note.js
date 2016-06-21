@@ -5,7 +5,8 @@ import {
     View,
     TextInput,
     TouchableHighlight,
-    ListView
+    ListView,
+    Platform
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -128,6 +129,7 @@ var styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
+        marginTop: Platform.OS === 'ios' ? 0 : 50,
     },
 
     spinnerContainer: {

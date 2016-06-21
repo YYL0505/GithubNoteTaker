@@ -4,7 +4,8 @@ import {
     Text,
     View,
     ScrollView,
-    TouchableHighlight
+    TouchableHighlight,
+    Platform
 } from 'react-native';
 var Badge = require('./Badge');
 var Separator = require('./Helpers/Separator');
@@ -61,6 +62,7 @@ Repository.propTypes= {
 var styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : 50,
     },
 
     rowContainer: {

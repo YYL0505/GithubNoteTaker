@@ -4,7 +4,8 @@ import {
     Text,
     View,
     Image,
-    TouchableHighlight
+    TouchableHighlight,
+    Platform
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -47,6 +48,7 @@ class Dashboard extends Component {
 
     goToProfile() {
         this.props.navigator.push({
+            id: 'profile',
             title: 'Profile',
             component: Profile,
             passProps: {userInfo: this.props.userInfo},
@@ -61,6 +63,7 @@ class Dashboard extends Component {
         api.getRepos(this.props.userInfo.login)
             .then((response) => {
                 this.props.navigator.push({
+                    id: 'repository',
                     title: 'Repository',
                     component: Repository,
                     passProps: {
@@ -84,6 +87,7 @@ class Dashboard extends Component {
             .then((response) => {
                 response = response || {};
                 this.props.navigator.push({
+                    id: 'note',
                     title: 'Notes',
                     component: Note,
                     passProps: {
@@ -103,7 +107,7 @@ class Dashboard extends Component {
 var styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 65,
+        marginTop: Platform.OS === 'ios' ? 65 : 50,
     },
 
     spinnerContainer: {

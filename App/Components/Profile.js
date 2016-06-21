@@ -3,7 +3,8 @@ import {
     StyleSheet,
     Text,
     View,
-    ScrollView
+    ScrollView,
+    Platform
 } from 'react-native';
 var Badge = require('./Badge');
 var Separator = require('./Helpers/Separator');
@@ -50,6 +51,7 @@ class Profile extends Component {
 var styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : 50,
     },
 
     buttonText: {
