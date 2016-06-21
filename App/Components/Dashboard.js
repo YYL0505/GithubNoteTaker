@@ -6,6 +6,7 @@ import {
     Image,
     TouchableHighlight
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 var Profile = require('./Profile');
 var Repository = require('./Repository');
@@ -15,6 +16,10 @@ var api = require('../Utils/api');
 class Dashboard extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            isLoading: false,
+        };
     }
 
     render() {
@@ -32,6 +37,10 @@ class Dashboard extends Component {
                 <TouchableHighlight style={styles.notes} onPress={this.goToNotes.bind(this)}>
                     <Text style={styles.viewText}>View Notes</Text>
                 </TouchableHighlight>
+
+                <View style={styles.spinnerContainer}>
+                    <Spinner visible={this.state.isLoading}/>
+                </View>
             </View>
         );
     }
@@ -45,23 +54,35 @@ class Dashboard extends Component {
     }
 
     goToRepos() {
+        this.setState({
+            isLoading: true,
+        });
+
         api.getRepos(this.props.userInfo.login)
             .then((response) => {
-                    this.props.navigator.push({
-                        title: 'Repository',
-                        component: Repository,
-                        passProps: {
-                            userInfo: this.props.userInfo,
-                            repos: response,},
-                    });
+                this.props.navigator.push({
+                    title: 'Repository',
+                    component: Repository,
+                    passProps: {
+                        userInfo: this.props.userInfo,
+                        repos: response,
+                    },
+                });
+
+                this.setState({
+                    isLoading: false,
+                });
             });
     }
 
     goToNotes() {
+        this.setState({
+            isLoading: true,
+        });
+
         api.getNotes(this.props.userInfo.login)
             .then((response) => {
                 response = response || {};
-                console.log(response);
                 this.props.navigator.push({
                     title: 'Notes',
                     component: Note,
@@ -69,6 +90,10 @@ class Dashboard extends Component {
                         userInfo: this.props.userInfo,
                         notes: response,
                     },
+                });
+
+                this.setState({
+                    isLoading: false,
                 });
             });
 
@@ -79,6 +104,10 @@ var styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 65,
+    },
+
+    spinnerContainer: {
+        transform: [{'translate':[0,0,1]}],
     },
 
     userAvatar: {
