@@ -6,8 +6,8 @@ import {
     ScrollView,
     Platform
 } from 'react-native';
-var Badge = require('./Badge');
-var Separator = require('./Helpers/Separator');
+import Badge from './Badge';
+import Separator from './Helpers/Separator';
 
 class Profile extends Component {
     constructor(props) {
@@ -74,6 +74,6 @@ var styles = StyleSheet.create({
     },
 });
 
-module.exports = Profile;
+export default Profile;
 
 

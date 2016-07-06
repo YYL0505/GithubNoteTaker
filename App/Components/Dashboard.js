@@ -9,15 +9,14 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-var Profile = require('./Profile');
-var Repository = require('./Repository');
-var Note = require('./Note');
-var api = require('../Utils/api');
+import Profile from './Profile';
+import Repository from './Repository';
+import Note from './Note';
+import api from '../Utils/api';
 
 class Dashboard extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             isLoading: false,
         };
@@ -145,6 +144,6 @@ var styles = StyleSheet.create({
 
 });
 
-module.exports = Dashboard;
+export default Dashboard;
 
 

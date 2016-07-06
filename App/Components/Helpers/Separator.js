@@ -22,4 +22,4 @@ var styles = StyleSheet.create({
     }
 });
 
-module.exports = Separator;
+export default Separator;

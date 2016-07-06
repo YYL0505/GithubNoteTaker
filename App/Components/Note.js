@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-var api = require('../Utils/api');
-var Badge = require('./Badge');
-var Separator = require('./Helpers/Separator');
+import api from '../Utils/api';
+import Badge from './Badge';
+import Separator from './Helpers/Separator';
 
 class Note extends Component {
     constructor(props) {
@@ -27,6 +27,7 @@ class Note extends Component {
     }
 
     render() {
+        console.log(this.props.state);
         return(
             <View style={styles.container}>
                 <ListView
@@ -167,7 +168,6 @@ var styles = StyleSheet.create({
         flexDirection: 'row',
     },
 });
-
-module.exports = Note;
+export default Note;
 
 

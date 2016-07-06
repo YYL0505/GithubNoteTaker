@@ -11,8 +11,8 @@ import {
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
-var api = require('../Utils/api');
-var Dashboard = require('./Dashboard');
+import api from '../Utils/api';
+import Dashboard from './Dashboard';
 
 class Main extends Component {
     constructor(props) {
@@ -162,6 +162,6 @@ var styles = StyleSheet.create({
 
 });
 
-module.exports = Main;
+export default Main;
 
 

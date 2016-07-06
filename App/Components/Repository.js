@@ -7,9 +7,10 @@ import {
     TouchableHighlight,
     Platform
 } from 'react-native';
-var Badge = require('./Badge');
-var Separator = require('./Helpers/Separator');
-var Web_View= require('./Helpers/WebViewer');
+
+import Badge from './Badge';
+import Separator from './Helpers/Separator';
+import Web_View from './Helpers/WebViewer';
 
 class Repository extends Component {
     render() {
@@ -91,6 +92,6 @@ var styles = StyleSheet.create({
 
 });
 
-module.exports = Repository;
+export default Repository;
 
 
