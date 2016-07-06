@@ -78,7 +78,7 @@ class BaseApp extends Component {
                 );
             case 'dashboard':
                 return (
-                    <Dashboard navigator={navigator} title={route.title} userInfo={route.passProps.userInfo}/>
+                    <Dashboard navigator={navigator} title={route.title} userInfo={route.passProps.userInfo} state={state} dispatch={dispatch}/>
                 );
             case 'profile':
                 return (
@@ -91,8 +91,7 @@ class BaseApp extends Component {
                 );
             case 'note':
                 return (
-                    <Note navigator={navigator} title={route.title} userInfo={route.passProps.userInfo}
-                          notes={route.passProps.notes} state={state}/>
+                    <Note navigator={navigator} title={route.title} userInfo={route.passProps.userInfo}/>
                 );
             case 'web_view':
                 return (

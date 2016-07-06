@@ -85,6 +85,10 @@ class Dashboard extends Component {
         api.getNotes(this.props.userInfo.login)
             .then((response) => {
                 response = response || {};
+                this.props.dispatch({
+                    type: 'FETCH_NOTES',
+                    notes: response
+                });
                 this.props.navigator.push({
                     id: 'note',
                     title: 'Notes',

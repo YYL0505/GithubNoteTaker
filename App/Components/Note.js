@@ -8,6 +8,7 @@ import {
     ListView,
     Platform
 } from 'react-native';
+import {connect} from 'react-redux';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import api from '../Utils/api';
@@ -17,29 +18,23 @@ import Separator from './Helpers/Separator';
 class Note extends Component {
     constructor(props) {
         super(props);
-        this.dataSource = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2});
-        this.state = {
-            dataSource: this.dataSource.cloneWithRows(this.props.notes),
-            note: '',
-            error: '',
-            isLoading: false,
-        };
     }
 
     render() {
-        console.log(this.props.state);
+        const {state, dispatch} = this.props;
+        var stateNote = state.default.note;
         return(
             <View style={styles.container}>
                 <ListView
-                    dataSource={this.state.dataSource}
+                    dataSource={stateNote.dataSource}
                     renderRow={this.renderRow}
                     enableEmptySections = {true}
                     renderHeader={this.renderHeader.bind(this)}/>
 
-                {this.footer()}
+                {this.footer(stateNote, dispatch)}
 
                 <View style={styles.spinnerContainer}>
-                    <Spinner visible={this.state.isLoading}/>
+                    <Spinner visible={stateNote.isLoading}/>
                 </View>
             </View>
         );
@@ -62,18 +57,18 @@ class Note extends Component {
         );
     }
 
-    footer() {
+    footer(stateNote, dispatch) {
         return (
             <View style={styles.footContainer}>
                 <TextInput
                     style={styles.searchInput}
-                    value={this.state.note}
-                    onChange={this.handleNoteChange.bind(this)}
+                    value={stateNote.note}
+                    onChange={this.handleNoteChange.bind(this, dispatch)}
                     placeHolder="New Note"/>
 
                 <TouchableHighlight
                     style={styles.button}
-                    onPress={this.submitNote.bind(this)}
+                    onPress={this.submitNote.bind(this, stateNote, dispatch)}
                     underlayColor="#88D4F5">
                     <Text style={styles.buttonText}> Submit </Text>
                 </TouchableHighlight>
@@ -81,39 +76,33 @@ class Note extends Component {
         );
     }
 
-    handleNoteChange(event) {
-        this.setState({
+    handleNoteChange(dispatch, event) {
+        dispatch({
+            type: 'SET_NOTE',
             note: event.nativeEvent.text,
         });
     }
 
-    submitNote() {
-        this.setState({
-            isLoading: true,
+    submitNote(stateNote, dispatch) {
+        dispatch({
+            type: 'TOGGLE_LOADING',
         });
 
-        api.addNote(this.props.userInfo.login, this.state.note)
+        api.addNote(this.props.userInfo.login, stateNote.note)
             .then(() => {
                 api.getNotes(this.props.userInfo.login)
                     .then((response) => {
-                        this.setState({
-                            isLoading: false,
-                        });
-
-                        this.setState({
-                            dataSource: this.dataSource.cloneWithRows(response),
-                            note: '',
+                        dispatch({
+                            type: 'FETCH_NOTES',
+                            notes: response,
                         });
                     })
                     .catch((error) => {
-                        this.setState({
-                            isLoading: false,
+                        dispatch({
+                            type: 'TOGGLE_LOADING',
                         });
 
                         console.log('Request failed' + error);
-                        this.setState({
-                            error: error,
-                        });
                     });
             })
     }
@@ -123,7 +112,6 @@ class Note extends Component {
 
 Note.propTypes= {
     userInfo: React.PropTypes.object.isRequired,
-    notes: React.PropTypes.object.isRequired,
 };
 
 var styles = StyleSheet.create({
@@ -168,6 +156,12 @@ var styles = StyleSheet.create({
         flexDirection: 'row',
     },
 });
-export default Note;
+
+function selector(state) {
+    return {
+        state: state
+    }
+}
+export default connect(selector)(Note);
 
 
