@@ -2,6 +2,7 @@ import {ListView} from 'react-native';
 const datas = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2});
 
 const initialState = {
+    userInfo: undefined,
     notes: [],
     note: '',
     error: '',
@@ -12,14 +13,14 @@ const initialState = {
 const note = (state = initialState, action) => {
     switch (action.type) {
         case 'FETCH_NOTES':
-            console.log('FETCH_NOTES');
             let newNotes = action.notes;
             return {
                 notes: newNotes,
                 note: '',
                 error: '',
                 isLoading: false,
-                dataSource: datas.cloneWithRows(newNotes)
+                dataSource: datas.cloneWithRows(newNotes),
+                userInfo: action.userInfo !== undefined ? action.userInfo : state.userInfo
             };
         case 'TOGGLE_LOADING':
             return Object.assign({}, state, {

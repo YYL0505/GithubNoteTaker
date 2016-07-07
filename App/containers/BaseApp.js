@@ -91,7 +91,7 @@ class BaseApp extends Component {
                 );
             case 'note':
                 return (
-                    <Note navigator={navigator} title={route.title} userInfo={route.passProps.userInfo}/>
+                    <Note navigator={navigator} title={route.title} />
                 );
             case 'web_view':
                 return (

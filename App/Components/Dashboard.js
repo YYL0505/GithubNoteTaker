@@ -87,16 +87,13 @@ class Dashboard extends Component {
                 response = response || {};
                 this.props.dispatch({
                     type: 'FETCH_NOTES',
-                    notes: response
+                    notes: response,
+                    userInfo: this.props.userInfo,
                 });
                 this.props.navigator.push({
                     id: 'note',
                     title: 'Notes',
                     component: Note,
-                    passProps: {
-                        userInfo: this.props.userInfo,
-                        notes: response,
-                    },
                 });
 
                 this.setState({

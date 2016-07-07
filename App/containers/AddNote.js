@@ -48,9 +48,9 @@ class AddNote extends Component {
             type: 'TOGGLE_LOADING',
         });
 
-        api.addNote(this.props.userInfo.login, stateNote.note)
+        api.addNote(stateNote.userInfo.login, stateNote.note)
             .then(() => {
-                api.getNotes(this.props.userInfo.login)
+                api.getNotes(stateNote.userInfo.login)
                     .then((response) => {
                         dispatch({
                             type: 'FETCH_NOTES',
@@ -68,11 +68,6 @@ class AddNote extends Component {
     }
 
 }
-
-
-AddNote.propTypes= {
-    userInfo: React.PropTypes.object.isRequired,
-};
 
 var styles = StyleSheet.create({
     

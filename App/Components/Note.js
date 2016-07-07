@@ -26,9 +26,9 @@ class Note extends Component {
                     dataSource={stateNote.dataSource}
                     renderRow={this.renderRow}
                     enableEmptySections = {true}
-                    renderHeader={this.renderHeader.bind(this)}/>
+                    renderHeader={this.renderHeader.bind(this, stateNote.userInfo)}/>
 
-                <AddNote userInfo={this.props.userInfo} />
+                <AddNote />
 
                 <View style={styles.spinnerContainer}>
                     <Spinner visible={stateNote.isLoading}/>
@@ -48,17 +48,12 @@ class Note extends Component {
         );
     }
 
-    renderHeader() {
+    renderHeader(userInfo) {
         return (
-            <Badge userInfo={this.props.userInfo}/>
+            <Badge userInfo={userInfo}/>
         );
     }
 }
-
-
-Note.propTypes= {
-    userInfo: React.PropTypes.object.isRequired,
-};
 
 var styles = StyleSheet.create({
     container: {
