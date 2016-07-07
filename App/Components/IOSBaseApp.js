@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {
     StyleSheet,
     View,
-    Navigator,
+    NavigatorIOS,
 } from 'react-native';
 
 
