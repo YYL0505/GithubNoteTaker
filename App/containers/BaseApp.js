@@ -78,7 +78,7 @@ class BaseApp extends Component {
                 );
             case 'dashboard':
                 return (
-                    <Dashboard navigator={navigator} title={route.title} userInfo={route.passProps.userInfo} state={state} dispatch={dispatch}/>
+                    <Dashboard navigator={navigator} title={route.title} />
                 );
             case 'profile':
                 return (

@@ -84,16 +84,16 @@ class Main extends Component {
                         error: 'User not found',
                     });
                 } else {
+                    dispatch({
+                        type: 'FETCH_USER',
+                        userInfo: response,
+                    });
+
                     this.props.navigator.push({
                         title: response.name || 'Select An Option',
                         id: 'dashboard',
                         component: Dashboard,
                         passProps: {userInfo: response},
-                    });
-
-                    dispatch({
-                        type: 'FETCH_USER',
-                        userInfo: response,
                     });
                 }
             });

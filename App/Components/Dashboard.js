@@ -8,6 +8,7 @@ import {
     Platform
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {connect} from 'react-redux';
 
 import Profile from './Profile';
 import Repository from './Repository';
@@ -23,18 +24,20 @@ class Dashboard extends Component {
     }
 
     render() {
+        const {state, dispatch} = this.props;
+        var stateUser = state.default.user;
         return (
             <View style={styles.container}>
-                <Image style={styles.userAvatar} source={{uri: this.props.userInfo.avatar_url}}/>
-                <TouchableHighlight style={styles.profile} onPress={this.goToProfile.bind(this)}>
+                <Image style={styles.userAvatar} source={{uri: stateUser.userInfo.avatar_url}}/>
+                <TouchableHighlight style={styles.profile} onPress={this.goToProfile.bind(this, stateUser)}>
                     <Text style={styles.viewText}>View Profile</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.repository} onPress={this.goToRepos.bind(this)}>
+                <TouchableHighlight style={styles.repository} onPress={this.goToRepos.bind(this, stateUser)}>
                     <Text style={styles.viewText}>View Repos</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.notes} onPress={this.goToNotes.bind(this)}>
+                <TouchableHighlight style={styles.notes} onPress={this.goToNotes.bind(this, stateUser, dispatch)}>
                     <Text style={styles.viewText}>View Notes</Text>
                 </TouchableHighlight>
 
@@ -45,28 +48,28 @@ class Dashboard extends Component {
         );
     }
 
-    goToProfile() {
+    goToProfile(stateUser) {
         this.props.navigator.push({
             id: 'profile',
             title: 'Profile',
             component: Profile,
-            passProps: {userInfo: this.props.userInfo},
+            passProps: {userInfo: stateUser.userInfo},
         });
     }
 
-    goToRepos() {
+    goToRepos(stateUser) {
         this.setState({
             isLoading: true,
         });
 
-        api.getRepos(this.props.userInfo.login)
+        api.getRepos(stateUser.userInfo.login)
             .then((response) => {
                 this.props.navigator.push({
                     id: 'repository',
                     title: 'Repository',
                     component: Repository,
                     passProps: {
-                        userInfo: this.props.userInfo,
+                        userInfo: stateUser.userInfo,
                         repos: response,
                     },
                 });
@@ -77,18 +80,18 @@ class Dashboard extends Component {
             });
     }
 
-    goToNotes() {
+    goToNotes(stateUser, dispatch) {
         this.setState({
             isLoading: true,
         });
 
-        api.getNotes(this.props.userInfo.login)
+        api.getNotes(stateUser.userInfo.login)
             .then((response) => {
                 response = response || {};
-                this.props.dispatch({
+                dispatch({
                     type: 'FETCH_NOTES',
                     notes: response,
-                    userInfo: this.props.userInfo,
+                    userInfo: stateUser.userInfo,
                 });
                 this.props.navigator.push({
                     id: 'note',
@@ -145,6 +148,11 @@ var styles = StyleSheet.create({
 
 });
 
-export default Dashboard;
+function selector(state) {
+    return {
+        state: state
+    }
+}
+export default connect(selector)(Dashboard);
 
 
