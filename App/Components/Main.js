@@ -9,7 +9,7 @@ import {
     Platform
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import {connect} from 'react-redux';
 
 import api from '../Utils/api';
 import Dashboard from './Dashboard';
@@ -17,30 +17,28 @@ import Dashboard from './Dashboard';
 class Main extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            username: "",
-            isLoading: false,
-            error: false
-        }
     }
 
     render() {
+        const {state, dispatch} = this.props;
+        var stateUser = state.default.user;
+
         var showErr = (
-            this.state.error ? <Text style={styles.error}> {this.state.error} </Text> : <View></View>
+            stateUser.error ? <Text style={styles.error}> {stateUser.error} </Text> : <View></View>
         );
 
         var indicator = (
-            this.state.isLoading ?
+            stateUser.isLoading ?
                 (Platform.OS === 'ios' ?
-                    <ActivityIndicatorIOS
-                        animating={this.state.isLoading}
-                        hidesWhenStopped={true}
-                        color="#111111"
-                        size="large"/>
-                    :
-                    <View style={styles.spinnerContainer}>
-                        <Spinner visible={this.state.isLoading}/>
-                    </View>
+                        <ActivityIndicatorIOS
+                            animating={stateUser.isLoading}
+                            hidesWhenStopped={true}
+                            color="#111111"
+                            size="large"/>
+                        :
+                        <View style={styles.spinnerContainer}>
+                            <Spinner visible={stateUser.isLoading}/>
+                        </View>
                 )
                 : <View></View>
 
@@ -52,10 +50,10 @@ class Main extends Component {
 
                 <TextInput
                     style={styles.searchInput}
-                    value={this.state.username}
-                    onChange={this.handleChange.bind(this)}/>
+                    value={stateUser.username}
+                    onChange={this.handleChange.bind(this, dispatch)}/>
 
-                <TouchableHighlight style={styles.button} onPress={this.handleSubmit.bind(this)} underlayColor="white">
+                <TouchableHighlight style={styles.button} onPress={this.handleSubmit.bind(this, stateUser, dispatch)} underlayColor="white">
                     <Text style={styles.searchText}> SEARCH </Text>
                 </TouchableHighlight>
 
@@ -66,43 +64,36 @@ class Main extends Component {
         );
     }
 
-    handleChange(event) {
-        this.setState({
+    handleChange(dispatch, event) {
+        dispatch({
+            type: 'UPDATE_USERNAME',
             username: event.nativeEvent.text,
         });
     }
 
-    handleSubmit() {
-        this.setState({
-            isLoading: true,
+    handleSubmit(staterUser, dispatch) {
+        dispatch({
+            type: 'TOGGLE_LOADING',
         });
 
-        api.getBio(this.state.username)
+        api.getBio(staterUser.username)
             .then((response) => {
                 if (response.message === 'Not Found') {
-                    this.setState({
+                    dispatch({
+                        type: 'SET_ERROR',
                         error: 'User not found',
-                        isLoading: false,
                     });
                 } else {
-                    if (Platform.OS === 'ios') {
-                        this.props.navigator.push({
-                            title: response.name || 'Select An Option',
-                            component: Dashboard,
-                            passProps: {userInfo: response},
-                        });
-                    } else {
-                        this.props.navigator.push({
-                            id: 'dashboard',
-                            title: response.name || 'Select An Option',
-                            passProps: {userInfo: response},
-                        });
-                    }
+                    this.props.navigator.push({
+                        title: response.name || 'Select An Option',
+                        id: 'dashboard',
+                        component: Dashboard,
+                        passProps: {userInfo: response},
+                    });
 
-                    this.setState({
-                        error: false,
-                        isLoading: false,
-                        username: "",
+                    dispatch({
+                        type: 'FETCH_USER',
+                        userInfo: response,
                     });
                 }
             });
@@ -120,7 +111,7 @@ var styles = StyleSheet.create({
     },
 
     spinnerContainer: {
-        transform: [{'translate':[0,0,1]}],
+        transform: [{'translate': [0, 0, 1]}],
     },
 
     title: {
@@ -162,6 +153,11 @@ var styles = StyleSheet.create({
 
 });
 
-export default Main;
+function selector(state) {
+    return {
+        state: state
+    }
+}
+export default connect(selector)(Main);
 
 
