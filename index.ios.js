@@ -6,8 +6,8 @@ import {
   View,
   NavigatorIOS
 } from 'react-native';
-var Main = require('./App/Components/Main');
-var Dashboard = require('./App/Components/Dashboard');
+var Main = require('./App/containers/Main');
+var Dashboard = require('./App/containers/Dashboard');
 
 class GithubNoteTaker extends Component {
   render() {

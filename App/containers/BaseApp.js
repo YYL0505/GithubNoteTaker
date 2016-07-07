@@ -11,8 +11,8 @@ import {
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import Main from './../Components/Main';
-import Dashboard from './../Components/Dashboard';
+import Main from './Main';
+import Dashboard from './Dashboard';
 import Profile from './../Components/Profile';
 import Repository from './../Components/Repository';
 import Note from './Note';

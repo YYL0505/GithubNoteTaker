@@ -10,9 +10,9 @@ import {
 import Spinner from 'react-native-loading-spinner-overlay';
 import {connect} from 'react-redux';
 
-import Profile from './Profile';
-import Repository from './Repository';
-import Note from '../containers/Note';
+import Profile from '../Components/Profile';
+import Repository from '../Components/Repository';
+import Note from './Note';
 import api from '../Utils/api';
 
 class Dashboard extends Component {
