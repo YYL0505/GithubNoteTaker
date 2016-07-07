@@ -45,7 +45,7 @@ class AddNote extends Component {
 
     submitNote(stateNote, dispatch) {
         dispatch({
-            type: 'TOGGLE_LOADING',
+            type: 'TOGGLE_LOADING_ON',
         });
 
         api.addNote(stateNote.userInfo.login, stateNote.note)
@@ -53,13 +53,17 @@ class AddNote extends Component {
                 api.getNotes(stateNote.userInfo.login)
                     .then((response) => {
                         dispatch({
+                            type: 'TOGGLE_LOADING_OFF',
+                        });
+                        
+                        dispatch({
                             type: 'FETCH_NOTES',
                             notes: response,
                         });
                     })
                     .catch((error) => {
                         dispatch({
-                            type: 'TOGGLE_LOADING',
+                            type: 'TOGGLE_LOADING_OFF',
                         });
 
                         console.log('Request failed' + error);

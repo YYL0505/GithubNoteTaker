@@ -28,7 +28,7 @@ class Main extends Component {
         );
 
         var indicator = (
-            stateUser.isLoading ?
+            this.props.state.default.loading.isLoading ?
                 (Platform.OS === 'ios' ?
                         <ActivityIndicatorIOS
                             animating={stateUser.isLoading}
@@ -37,7 +37,7 @@ class Main extends Component {
                             size="large"/>
                         :
                         <View style={styles.spinnerContainer}>
-                            <Spinner visible={stateUser.isLoading}/>
+                            <Spinner visible={this.props.state.default.loading.isLoading}/>
                         </View>
                 )
                 : <View></View>
@@ -73,12 +73,16 @@ class Main extends Component {
 
     handleSubmit(staterUser, dispatch) {
         dispatch({
-            type: 'TOGGLE_LOADING',
+            type: 'TOGGLE_LOADING_ON',
         });
 
         api.getBio(staterUser.username)
             .then((response) => {
                 if (response.message === 'Not Found') {
+                    dispatch({
+                        type: 'TOGGLE_LOADING_OFF',
+                    });
+
                     dispatch({
                         type: 'SET_ERROR',
                         error: 'User not found',
@@ -94,6 +98,10 @@ class Main extends Component {
                         id: 'dashboard',
                         component: Dashboard,
                         passProps: {userInfo: response},
+                    });
+
+                    dispatch({
+                        type: 'TOGGLE_LOADING_OFF',
                     });
                 }
             });

@@ -18,9 +18,6 @@ import api from '../Utils/api';
 class Dashboard extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            isLoading: false,
-        };
     }
 
     render() {
@@ -33,7 +30,7 @@ class Dashboard extends Component {
                     <Text style={styles.viewText}>View Profile</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.repository} onPress={this.goToRepos.bind(this, stateUser)}>
+                <TouchableHighlight style={styles.repository} onPress={this.goToRepos.bind(this, stateUser, dispatch)}>
                     <Text style={styles.viewText}>View Repos</Text>
                 </TouchableHighlight>
 
@@ -42,7 +39,7 @@ class Dashboard extends Component {
                 </TouchableHighlight>
 
                 <View style={styles.spinnerContainer}>
-                    <Spinner visible={this.state.isLoading}/>
+                    <Spinner visible={this.props.state.default.loading.isLoading}/>
                 </View>
             </View>
         );
@@ -57,9 +54,9 @@ class Dashboard extends Component {
         });
     }
 
-    goToRepos(stateUser) {
-        this.setState({
-            isLoading: true,
+    goToRepos(stateUser, dispatch) {
+        dispatch({
+            type: 'TOGGLE_LOADING_ON',
         });
 
         api.getRepos(stateUser.userInfo.login)
@@ -74,15 +71,15 @@ class Dashboard extends Component {
                     },
                 });
 
-                this.setState({
-                    isLoading: false,
+                dispatch({
+                    type: 'TOGGLE_LOADING_OFF',
                 });
             });
     }
 
     goToNotes(stateUser, dispatch) {
-        this.setState({
-            isLoading: true,
+        dispatch({
+            type: 'TOGGLE_LOADING_ON',
         });
 
         api.getNotes(stateUser.userInfo.login)
@@ -99,8 +96,8 @@ class Dashboard extends Component {
                     component: Note,
                 });
 
-                this.setState({
-                    isLoading: false,
+                dispatch({
+                    type: 'TOGGLE_LOADING_OFF',
                 });
             });
 

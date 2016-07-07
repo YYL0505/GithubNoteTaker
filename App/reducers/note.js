@@ -6,7 +6,6 @@ const initialState = {
     notes: [],
     note: '',
     error: '',
-    isLoading: false,
     dataSource: datas.cloneWithRows([])
 };
 
@@ -18,14 +17,9 @@ const note = (state = initialState, action) => {
                 notes: newNotes,
                 note: '',
                 error: '',
-                isLoading: false,
                 dataSource: datas.cloneWithRows(newNotes),
                 userInfo: action.userInfo !== undefined ? action.userInfo : state.userInfo
             };
-        case 'TOGGLE_LOADING':
-            return Object.assign({}, state, {
-                isLoading: !state.isLoading,
-            });
         case 'SET_NOTE':
             return Object.assign({}, state, {
                 note: action.note,

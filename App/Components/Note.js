@@ -31,7 +31,7 @@ class Note extends Component {
                 <AddNote />
 
                 <View style={styles.spinnerContainer}>
-                    <Spinner visible={stateNote.isLoading}/>
+                    <Spinner visible={this.props.state.default.loading.isLoading}/>
                 </View>
             </View>
         );
