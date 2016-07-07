@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 
 import Profile from './Profile';
 import Repository from './Repository';
-import Note from './Note';
+import Note from '../containers/Note';
 import api from '../Utils/api';
 
 class Dashboard extends Component {

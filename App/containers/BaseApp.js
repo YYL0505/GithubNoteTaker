@@ -15,7 +15,7 @@ import Main from './../Components/Main';
 import Dashboard from './../Components/Dashboard';
 import Profile from './../Components/Profile';
 import Repository from './../Components/Repository';
-import Note from './../Components/Note';
+import Note from './Note';
 import Web_View from './../Components/Helpers/WebViewer';
 
 class BaseApp extends Component {
