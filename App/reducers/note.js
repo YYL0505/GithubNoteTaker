@@ -5,7 +5,6 @@ const initialState = {
     userInfo: undefined,
     notes: [],
     note: '',
-    error: '',
     dataSource: datas.cloneWithRows([])
 };
 
