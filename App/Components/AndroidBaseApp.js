@@ -8,17 +8,14 @@ import {
     Image
 } from 'react-native';
 
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import Main from '../containers/Main';
+import Dashboard from '../containers/Dashboard';
+import Profile from './Profile';
+import Repository from './Repository';
+import Note from '../containers/Note';
+import Web_View from './Helpers/WebViewer';
 
-import Main from './Main';
-import Dashboard from './Dashboard';
-import Profile from './../Components/Profile';
-import Repository from './../Components/Repository';
-import Note from './Note';
-import Web_View from './../Components/Helpers/WebViewer';
-
-class BaseApp extends Component {
+class AndroidBaseApp extends Component {
     render() {
         var NavigationBarRouteMapper = {
             LeftButton(route, navigator, index, navState) {
@@ -69,8 +66,6 @@ class BaseApp extends Component {
     }
 
     renderScene(route, navigator) {
-        const {state, dispatch} = this.props;
-        // const action = bindActionCreators(actions, dispatch);
         switch (route.id) {
             case 'main':
                 return (
@@ -125,10 +120,4 @@ var styles = StyleSheet.create({
         fontSize: 22
     }
 });
-
-function selector(state) {
-    return {
-        state: state
-    }
-}
-export default connect(selector)(BaseApp);
+export default AndroidBaseApp;

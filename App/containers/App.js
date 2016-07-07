@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 import {
     View,
-    Text
+    Text,
+    Platform
 } from 'react-native';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import * as reducers from '../reducers';
-import BaseApp from './BaseApp';
+import IOSBaseApp from '../Components/IOSBaseApp';
+import AndroidBaseApp from '../Components/AndroidBaseApp';
 
 //apply thunk
 const createStoreWithThunk = applyMiddleware(thunk)(createStore);
@@ -17,9 +19,17 @@ const store = createStoreWithThunk(reducer);
 
 class App extends Component {
     render() {
+        if (Platform.OS === 'ios') {
+            return (
+                <Provider store={store}>
+                    <IOSBaseApp />
+                </Provider>
+            );
+        } 
+        
         return (
             <Provider store={store}>
-                <BaseApp />
+                <AndroidBaseApp />
             </Provider>
         );
     }
