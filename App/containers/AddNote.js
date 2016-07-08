@@ -6,9 +6,11 @@ import {
     TextInput,
     TouchableHighlight
 } from 'react-native';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import api from '../Utils/api';
+import * as actions from '../action';
 
 class AddNote extends Component {
     constructor(props) {
@@ -18,53 +20,42 @@ class AddNote extends Component {
     render() {
         const {state, dispatch} = this.props;
         var stateNote = state.default.note;
+        const action = bindActionCreators(actions, dispatch);
         return (
             <View style={styles.footContainer}>
                 <TextInput
                     style={styles.searchInput}
                     value={stateNote.note}
-                    onChange={this.handleNoteChange.bind(this, dispatch)}
+                    onChange={this.handleNoteChange.bind(this, dispatch, action)}
                     placeHolder="New Note"/>
 
                 <TouchableHighlight
                     style={styles.button}
-                    onPress={this.submitNote.bind(this, stateNote, dispatch)}
+                    onPress={this.submitNote.bind(this, stateNote, dispatch, action)}
                     underlayColor="#88D4F5">
                     <Text style={styles.buttonText}> Submit </Text>
                 </TouchableHighlight>
             </View>
         );
     }
-    
-    handleNoteChange(dispatch, event) {
-        dispatch({
-            type: 'SET_NOTE',
-            note: event.nativeEvent.text,
-        });
+
+    handleNoteChange(dispatch, action, event) {
+        dispatch(action.setNote(event.nativeEvent.text));
     }
 
-    submitNote(stateNote, dispatch) {
-        dispatch({
-            type: 'TOGGLE_LOADING_ON',
-        });
+    submitNote(stateNote, dispatch, action) {
+        dispatch(action.toggleLoadingOn());
 
         api.addNote(stateNote.userInfo.login, stateNote.note)
             .then(() => {
                 api.getNotes(stateNote.userInfo.login)
                     .then((response) => {
-                        dispatch({
-                            type: 'TOGGLE_LOADING_OFF',
-                        });
-                        
-                        dispatch({
-                            type: 'FETCH_NOTES',
-                            notes: response,
-                        });
+                        dispatch(action.toggleLoadingOff());
+
+                        dispatch(action.fetchNotes(response, undefined));
                     })
                     .catch((error) => {
-                        dispatch({
-                            type: 'TOGGLE_LOADING_OFF',
-                        });
+                        dispatch(action.toggleLoadingOff());
 
                         console.log('Request failed' + error);
                     });
@@ -74,7 +65,7 @@ class AddNote extends Component {
 }
 
 var styles = StyleSheet.create({
-    
+
     buttonText: {
         fontSize: 18,
         color: '#FFFFFF',

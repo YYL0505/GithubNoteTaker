@@ -9,8 +9,10 @@ import {
     Platform
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
+import * as actions from '../action';
 import api from '../Utils/api';
 import Dashboard from './Dashboard';
 
@@ -22,6 +24,7 @@ class Main extends Component {
     render() {
         const {state, dispatch} = this.props;
         var stateUser = state.default.user;
+        const action = bindActionCreators(actions, dispatch);
 
         var showErr = (
             stateUser.error ? <Text style={styles.error}> {stateUser.error} </Text> : <View></View>
@@ -51,9 +54,9 @@ class Main extends Component {
                 <TextInput
                     style={styles.searchInput}
                     value={stateUser.username}
-                    onChange={this.handleChange.bind(this, dispatch)}/>
+                    onChange={this.handleChange.bind(this, dispatch, action)}/>
 
-                <TouchableHighlight style={styles.button} onPress={this.handleSubmit.bind(this, stateUser, dispatch)} underlayColor="white">
+                <TouchableHighlight style={styles.button} onPress={this.handleSubmit.bind(this, stateUser, dispatch, action)} underlayColor="white">
                     <Text style={styles.searchText}> SEARCH </Text>
                 </TouchableHighlight>
 
@@ -64,34 +67,23 @@ class Main extends Component {
         );
     }
 
-    handleChange(dispatch, event) {
-        dispatch({
-            type: 'UPDATE_USERNAME',
-            username: event.nativeEvent.text,
-        });
+    handleChange(dispatch, action, event) {
+        dispatch(action.setUser(event.nativeEvent.text));
     }
 
-    handleSubmit(staterUser, dispatch) {
-        dispatch({
-            type: 'TOGGLE_LOADING_ON',
-        });
+    handleSubmit(staterUser, dispatch, action) {
+        dispatch(action.toggleLoadingOn());
+
 
         api.getBio(staterUser.username)
             .then((response) => {
                 if (response.message === 'Not Found') {
-                    dispatch({
-                        type: 'TOGGLE_LOADING_OFF',
-                    });
+                    dispatch(action.toggleLoadingOff());
 
-                    dispatch({
-                        type: 'SET_ERROR',
-                        error: 'User not found',
-                    });
+                    dispatch(action.setError('User not found'));
+
                 } else {
-                    dispatch({
-                        type: 'FETCH_USER',
-                        userInfo: response,
-                    });
+                    dispatch(action.fetchUser(response));
 
                     this.props.navigator.push({
                         title: response.name || 'Select An Option',
@@ -100,9 +92,7 @@ class Main extends Component {
                         passProps: {userInfo: response},
                     });
 
-                    dispatch({
-                        type: 'TOGGLE_LOADING_OFF',
-                    });
+                    dispatch(action.toggleLoadingOff());
                 }
             });
     }

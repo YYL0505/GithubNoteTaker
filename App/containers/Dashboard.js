@@ -8,8 +8,10 @@ import {
     Platform
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
+import * as actions from '../action';
 import Profile from '../Components/Profile';
 import Repository from '../Components/Repository';
 import Note from './Note';
@@ -23,6 +25,8 @@ class Dashboard extends Component {
     render() {
         const {state, dispatch} = this.props;
         var stateUser = state.default.user;
+        const action = bindActionCreators(actions, dispatch);
+
         return (
             <View style={styles.container}>
                 <Image style={styles.userAvatar} source={{uri: stateUser.userInfo.avatar_url}}/>
@@ -30,11 +34,11 @@ class Dashboard extends Component {
                     <Text style={styles.viewText}>View Profile</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.repository} onPress={this.goToRepos.bind(this, stateUser, dispatch)}>
+                <TouchableHighlight style={styles.repository} onPress={this.goToRepos.bind(this, stateUser, dispatch, action)}>
                     <Text style={styles.viewText}>View Repos</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.notes} onPress={this.goToNotes.bind(this, stateUser, dispatch)}>
+                <TouchableHighlight style={styles.notes} onPress={this.goToNotes.bind(this, stateUser, dispatch, action)}>
                     <Text style={styles.viewText}>View Notes</Text>
                 </TouchableHighlight>
 
@@ -54,10 +58,8 @@ class Dashboard extends Component {
         });
     }
 
-    goToRepos(stateUser, dispatch) {
-        dispatch({
-            type: 'TOGGLE_LOADING_ON',
-        });
+    goToRepos(stateUser, dispatch, action) {
+        dispatch(action.toggleLoadingOn());
 
         api.getRepos(stateUser.userInfo.login)
             .then((response) => {
@@ -71,34 +73,26 @@ class Dashboard extends Component {
                     },
                 });
 
-                dispatch({
-                    type: 'TOGGLE_LOADING_OFF',
-                });
+                dispatch(action.toggleLoadingOff());
             });
     }
 
-    goToNotes(stateUser, dispatch) {
-        dispatch({
-            type: 'TOGGLE_LOADING_ON',
-        });
+    goToNotes(stateUser, dispatch, action) {
+        dispatch(action.toggleLoadingOn());
 
         api.getNotes(stateUser.userInfo.login)
             .then((response) => {
                 response = response || {};
-                dispatch({
-                    type: 'FETCH_NOTES',
-                    notes: response,
-                    userInfo: stateUser.userInfo,
-                });
+
+                dispatch(action.fetchNotes(response, stateUser.userInfo));
+
                 this.props.navigator.push({
                     id: 'note',
                     title: 'Notes',
                     component: Note,
                 });
 
-                dispatch({
-                    type: 'TOGGLE_LOADING_OFF',
-                });
+                dispatch(action.toggleLoadingOff());
             });
 
     }
